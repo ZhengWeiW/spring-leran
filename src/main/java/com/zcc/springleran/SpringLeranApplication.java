@@ -8,6 +8,7 @@ public class SpringLeranApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringLeranApplication.class, args);
+
     }
 
 }
