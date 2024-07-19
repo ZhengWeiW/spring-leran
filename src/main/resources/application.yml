@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: core-query-server
+  redis:
+    host : 127.0.0.1
+    port : 36
+    password : 123
+my:
+  config:
+    savePath:
+
+
