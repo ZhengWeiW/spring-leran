@@ -23,8 +23,19 @@ import java.util.Map;
  * @since PdfGenerator2.java v1.0 2024年09月24日 20:29 Allen.zww
  */
 public class PdfGenerator2 {
-    public static void main(String[] args) {
 
+    // 字体
+    private final static String PDF_FONT = "Helvetica";
+    //图片的左边距
+    private final static float FIXED_POSITION_LEFT = 250;
+    //图片的下边距
+    private final static float FIXED_POSITION_BOTTOM = 750;
+    //图片宽度
+    private final static float IMAGE_WIDTH = 100;
+    //图片高度
+    private final static float IMAGE_HEIGHT = 100;
+
+    public static void main(String[] args) {
         try {
             // 定义模板路径和输出路径
             String templatePath = "E:\\新桌面\\pdf\\20240924-logo.pdf"; // 模板文件路径
@@ -37,7 +48,7 @@ public class PdfGenerator2 {
             PdfWriter writer = new PdfWriter(new FileOutputStream(outputPath));
             // 创建 PdfDocument
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
-
+            // 创建图片 Document
             Document document = new Document(pdfDoc);
             // 获取 PDF 表单
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdfDoc, true);
@@ -46,36 +57,36 @@ public class PdfGenerator2 {
             Map<String, String> params = new HashMap<>();
             params.put("payAmount", "123");
             params.put("doneTimeZone", "456");
+            params.put("logo", "456");
 
-            PdfFont font = PdfFontFactory.createFont("Helvetica");
-            // 使用 Map 批量填充表单字段
-            for (Map.Entry<String, String> param : params.entrySet()) {
-                // 将 Map 中的值写到 PDF 模板对应的文本域中
-                String key = param.getKey();
-                String value = param.getValue();
-                PdfFormField field = form.getField(key);
+            //填充表单元素
+            PdfFont font = PdfFontFactory.createFont(PDF_FONT);
+            Map<String, PdfFormField> formFields = form.getFormFields();
+            for (Map.Entry<String, PdfFormField> formField : formFields.entrySet()) {
+                String key = formField.getKey();
+                if(form.getField(key) == null){
+                    continue;
+                }
+                PdfFormField field = form.getField(key).setValue(params.get(key));
                 field.setFont(font);
-                field.setValue(value);
-            }
 
+            }
             // 添加图片
             ImageData imageData = ImageDataFactory.create(imagePath);
             Image image = new Image(imageData);
-
             // 设置图片位置和大小
-            image.setFixedPosition(100, 400); // 设置图片左下角的位置 (x, y)
-            image.scaleToFit(200, 200); // 设置图片缩放到最大宽高为 200x200
+            // 设置图片左下角的位置 (x, y)
+            image.setFixedPosition(FIXED_POSITION_LEFT, FIXED_POSITION_BOTTOM);
+            // 设置图片缩放到最大宽高为 200x200
+            image.scaleToFit(IMAGE_WIDTH, IMAGE_HEIGHT);
             // 将图片添加到 Document 对象
             document.add(image);
-
             // 可选：将表单字段设为不可编辑
             form.flattenFields();
 
             // 关闭文档
-            // 将图片添加到 Document 对象
             document.close();
             pdfDoc.close();
-            System.out.println("PDF form filled successfully!");
         } catch (IOException e) {
             e.printStackTrace();
         }
