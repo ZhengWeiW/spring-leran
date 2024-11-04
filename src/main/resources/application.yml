@@ -17,14 +17,21 @@ xxl:
   job:
     accessToken: default_token
     admin:
-      addresses: http://127.0.0.1:8080/xxl-job-admin
+      addresses: http://127.0.0.1:8189/xxl-job-admin
     executor:
-      appname: xxl-job-executor-test-zhu
+      appname: core-query-server
       address:  # 填充地址，假设执行器运行在本地
       ip: 127.0.0.1  # 填充本地IP，确保它与address配置一致
       port: 9999
       logpath: /data/applogs/xxl-job/jobhandler
       logretentiondays: -1
+# RocketMq
+rocketmq:
+  name-server: 192.168.1.48:9876
+  producer:
+    group: producer-group
+  consumer:
+    group: consumer-group
 
 
 
